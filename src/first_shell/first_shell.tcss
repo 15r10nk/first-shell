@@ -1,0 +1,28 @@
+FInput{
+    border: none;
+    height:1;
+    padding:0;
+}
+
+Prompt{
+    layout: horizontal;
+}
+
+Prompt Static{
+    width: 2;
+}
+
+HistoryEntry{
+    layout: horizontal;
+}
+
+HistoryEntry #text{
+    width: 100%;
+}
+HistoryEntry Static{
+    width: 2;
+}
+
+*{
+    color: green;
+}
