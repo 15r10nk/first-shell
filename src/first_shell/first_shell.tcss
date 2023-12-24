@@ -23,6 +23,10 @@ HistoryEntry Static{
     width: 2;
 }
 
-*{
+HistoryEntry{
+    color: green;
+}
+
+Prompt *{
     color: green;
 }

@@ -32,48 +32,13 @@ from io import BytesIO
 from pydub import AudioSegment
 import simpleaudio
 
-@lru_cache()
-def text_to_mp3(text):
-    tts = gTTS(text=text, lang="de", slow=False)
-    mp3_fp = BytesIO()
-    tts.write_to_fp(mp3_fp)
-    mp3_fp.seek(0)
-    mp3_audio = AudioSegment.from_file(mp3_fp, format="mp3")
+from .xmas import XMas
 
-    wav_data = BytesIO()
-    mp3_audio.export(wav_data, format="wav")
-    
-    return wav_data
+from .say import say,setup
 
+import subprocess as sp
 
-current_play=None
-
-def say(text):
-    global current_play
-    if not text:
-        return
-
-    from time import sleep
-
-
-
-    print(text)
-
-    for sym, name in symbols.items():
-        text = text.replace(sym, f" {name} ")
-
-    if current_play is not None:
-        current_play.stop()
-
-    data=text_to_mp3(text)
-    data.seek(0)
-    wave_obj = simpleaudio.WaveObject.from_wave_file(data)
-    current_play = wave_obj.play()
-
-for l in "abcdefghijklmnopqrstuvwxyz":
-    print(l)
-    text_to_mp3(l)
-    text_to_mp3(l.upper())
+#setup()
 
 
 class FInput(Input):
@@ -117,17 +82,29 @@ class HistoryEntry(Static):
 class FirstShell(App):
     CSS_PATH="first_shell.tcss"
 
+    SCREENS={"xmas":XMas()}
 
     def compose(self):
         yield ScrollableContainer(Prompt())
-        yield Footer()
 
 
     async def on_input_submitted(self,event):
         say(event.value)
-        p=HistoryEntry(event.value)
-        self.query_one(ScrollableContainer).mount(p,before=self.query_one(Prompt))
+        cmd=event.value.lower().strip()
+        if cmd=="xmas":
+            self.push_screen("xmas")
+            return
+        if cmd=="update":
+            result=sp.run("python -m pip install -U first-shell".split(),capture_output=True)
+            p=HistoryEntry((result.stdout+result.stderr).decode())
+        else:
+            p=HistoryEntry(event.value)
+        
+        scroll_container=self.query_one(ScrollableContainer)
+        
+        scroll_container.mount(p,before=self.query_one(Prompt))
         self.query_one(Prompt).query_one(Input).value=""
+        scroll_container.scroll_end()
 
     async def on_mount(self):
         await sleep(0.01)
