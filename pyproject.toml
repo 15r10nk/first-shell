@@ -1,17 +1,10 @@
 [build-system]
-requires = ["hatchling"]
 build-backend = "hatchling.build"
+requires = ["hatchling"]
 
 [project]
-name = "first-shell"
-dynamic = ["version"]
-description = 'The first shell for every littel nerd'
-readme = "README.md"
-requires-python = ">=3.7"
-license = "MIT"
-keywords = []
 authors = [
-  { name = "Frank Hoffmann", email = "15r10nk-git@polarbit.de" },
+  {name = "Frank Hoffmann", email = "15r10nk-git@polarbit.de"}
 ]
 classifiers = [
   "Development Status :: 4 - Beta",
@@ -22,76 +15,121 @@ classifiers = [
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: Implementation :: CPython",
-  "Programming Language :: Python :: Implementation :: PyPy",
+  "Programming Language :: Python :: Implementation :: PyPy"
 ]
 dependencies = [
-"gTTS>=2.4.0",
-"python-vlc>=3.0.20123",
-    "textual>=0.45.1"
+  "gTTS>=2.4.0",
+  "textual>=0.45.1",
+  "simpleaudio",
+  "pydub"
 ]
+description = 'The first shell for every littel nerd'
+dynamic = ["version"]
+keywords = []
+license = "MIT"
+name = "first-shell"
+readme = "README.md"
+requires-python = ">=3.7"
 
 [project.urls]
 Documentation = "https://github.com/unknown/first-shell#readme"
 Issues = "https://github.com/unknown/first-shell/issues"
 Source = "https://github.com/unknown/first-shell"
 
-[tool.hatch.version]
-path = "src/first_shell/__about__.py"
+[project.scripts]
+first-shell = "first_shell.__main__:main"
+
+[tool.black]
+line-length = 120
+skip-string-normalization = true
+target-version = ["py37"]
+
+[tool.coverage.paths]
+first_shell = ["src/first_shell", "*/first-shell/src/first_shell"]
+tests = ["tests", "*/first-shell/tests"]
+
+[tool.coverage.report]
+exclude_lines = [
+  "no cov",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:"
+]
+
+[tool.coverage.run]
+branch = true
+omit = [
+  "src/first_shell/__about__.py"
+]
+parallel = true
+source_pkgs = ["first_shell", "tests"]
+
+[[tool.hatch.envs.all.matrix]]
+python = ["3.7", "3.8", "3.9", "3.10", "3.11"]
 
 [tool.hatch.envs.default]
 dependencies = [
   "coverage[toml]>=6.5",
   "pytest",
-    "textual-dev",
-    "simpleaudio",
-    "pydub"
+  "textual-dev"
 ]
+
 [tool.hatch.envs.default.scripts]
-test = "pytest {args:tests}"
-test-cov = "coverage run -m pytest {args:tests}"
-cov-report = [
-  "- coverage combine",
-  "coverage report",
-]
 cov = [
   "test-cov",
-  "cov-report",
+  "cov-report"
 ]
-dev= "hatch run textual run --dev first_shell.__main__:FirstShell"
-
-[[tool.hatch.envs.all.matrix]]
-python = ["3.7", "3.8", "3.9", "3.10", "3.11"]
+cov-report = [
+  "- coverage combine",
+  "coverage report"
+]
+dev = "hatch run textual run --dev first_shell.__main__:FirstShell"
+test = "pytest {args:tests}"
+test-cov = "coverage run -m pytest {args:tests}"
 
 [tool.hatch.envs.lint]
-detached = true
 dependencies = [
   "black>=23.1.0",
   "mypy>=1.0.0",
-  "ruff>=0.0.243",
+  "ruff>=0.0.243"
 ]
+detached = true
+
 [tool.hatch.envs.lint.scripts]
-typing = "mypy --install-types --non-interactive {args:src/first_shell tests}"
-style = [
-  "ruff {args:.}",
-  "black --check --diff {args:.}",
+all = [
+  "style",
+  "typing"
 ]
 fmt = [
   "black {args:.}",
   "ruff --fix {args:.}",
-  "style",
+  "style"
 ]
-all = [
-  "style",
-  "typing",
+style = [
+  "ruff {args:.}",
+  "black --check --diff {args:.}"
 ]
+typing = "mypy --install-types --non-interactive {args:src/first_shell tests}"
 
-[tool.black]
-target-version = ["py37"]
-line-length = 120
-skip-string-normalization = true
+[tool.hatch.version]
+path = "src/first_shell/__about__.py"
 
 [tool.ruff]
-target-version = "py37"
+ignore = [
+  # Allow non-abstract empty methods in abstract base classes
+  "B027",
+  # Allow boolean positional values in function calls, like `dict.get(... True)`
+  "FBT003",
+  # Ignore checks for possible passwords
+  "S105",
+  "S106",
+  "S107",
+  # Ignore complexity
+  "C901",
+  "PLR0911",
+  "PLR0912",
+  "PLR0913",
+  "PLR0915"
+]
 line-length = 120
 select = [
   "A",
@@ -118,48 +156,20 @@ select = [
   "TID",
   "UP",
   "W",
-  "YTT",
+  "YTT"
 ]
-ignore = [
-  # Allow non-abstract empty methods in abstract base classes
-  "B027",
-  # Allow boolean positional values in function calls, like `dict.get(... True)`
-  "FBT003",
-  # Ignore checks for possible passwords
-  "S105", "S106", "S107",
-  # Ignore complexity
-  "C901", "PLR0911", "PLR0912", "PLR0913", "PLR0915",
-]
+target-version = "py37"
 unfixable = [
   # Don't touch unused imports
-  "F401",
+  "F401"
 ]
-
-[tool.ruff.isort]
-known-first-party = ["first_shell"]
 
 [tool.ruff.flake8-tidy-imports]
 ban-relative-imports = "all"
 
+[tool.ruff.isort]
+known-first-party = ["first_shell"]
+
 [tool.ruff.per-file-ignores]
 # Tests can use magic values, assertions, and relative imports
 "tests/**/*" = ["PLR2004", "S101", "TID252"]
-
-[tool.coverage.run]
-source_pkgs = ["first_shell", "tests"]
-branch = true
-parallel = true
-omit = [
-  "src/first_shell/__about__.py",
-]
-
-[tool.coverage.paths]
-first_shell = ["src/first_shell", "*/first-shell/src/first_shell"]
-tests = ["tests", "*/first-shell/tests"]
-
-[tool.coverage.report]
-exclude_lines = [
-  "no cov",
-  "if __name__ == .__main__.:",
-  "if TYPE_CHECKING:",
-]
