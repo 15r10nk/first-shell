@@ -62,7 +62,7 @@ def say(text):
 def setup():
     print("loading ", end="")
     for l in "abcdefghijklmnopqrstuvwxyz":
-        print(".", end="",flush=True)
+        print(".", end="", flush=True)
         text_to_mp3(l)
 
     print()

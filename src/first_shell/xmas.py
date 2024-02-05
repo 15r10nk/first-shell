@@ -128,12 +128,11 @@ class XMas(Screen):
 
     def on_key(self, event):
         word = self.query_one(Word)
-        tree= self.query_one(Tree)
-
+        tree = self.query_one(Tree)
 
         if event.is_printable:
             word.guessed = word.guessed | {event.key.upper()}
-            tree.dark_candles=word.wrong
+            tree.dark_candles = word.wrong
 
             if event.key.upper() not in word.word:
                 if "_" not in word.current_word:
@@ -150,8 +149,6 @@ class XMas(Screen):
 
         if "_" not in word.current_word and event.name == "enter":
             self.reset()
-
-
 
     def reset(self):
         word = self.query_one(Word)

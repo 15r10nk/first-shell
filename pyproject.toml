@@ -31,13 +31,13 @@ name = "first-shell"
 readme = "README.md"
 requires-python = ">=3.7"
 
+[project.scripts]
+first-shell = "first_shell.__main__:main"
+
 [project.urls]
 Documentation = "https://github.com/unknown/first-shell#readme"
 Issues = "https://github.com/unknown/first-shell/issues"
 Source = "https://github.com/unknown/first-shell"
-
-[project.scripts]
-first-shell = "first_shell.__main__:main"
 
 [tool.black]
 line-length = 120
