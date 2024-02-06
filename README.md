@@ -8,7 +8,7 @@
 
 -----
 
-Hi, I wrote the following shell for my 4 year old daughter, because she wants to do the same things like her dad. 
+Hi, I wrote the following shell for my 4 year old daughter, because she wants to do the same things like her dad.
 
 
 ## Installation

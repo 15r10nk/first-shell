@@ -23,7 +23,7 @@ from asyncio import sleep
 
 from .xmas import XMas
 
-from .say import say,setup
+from .say import say, setup
 
 import subprocess as sp
 
@@ -58,7 +58,6 @@ class Prompt(Static):
     def on_mount(self):
         print("mounted")
         self.focus()
-
 
 
 class HistoryEntry(Static):
@@ -97,15 +96,14 @@ class FirstShell(App):
         self.query_one(Prompt).query_one(Input).value = ""
         scroll_container.scroll_end()
 
-
     async def on_mount(self):
         await sleep(0.01)
         self.query(Input).last().focus()
 
+
 def main():
     shell = FirstShell()
     shell.run()
-
 
 
 if __name__ == "__main__":
